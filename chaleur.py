@@ -61,7 +61,8 @@ class HeatSimulation3D:
         ]
 
         current_section = self.grid[y_start:y_end, x_start:x_end]
-        self.grid[y_start:y_end, x_start:x_end] = np.maximum(current_section, heat_section)
+        self.grid[y_start:y_end, x_start:x_end] = np.maximum(current_section,
+                                                             heat_section)
 
     def visualize_3d(self, ax=None):
 
