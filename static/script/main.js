@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function check_compatibilite(event) {
         startStopButton.disabled = false;
-        sendStatus.textContent = "inactif (pas d'accéléromètre détécté, essayez de bouger votre appareil)";
+        sendStatus.textContent = "inactif";
         window.removeEventListener('devicemotion', check_compatibilite);
     }
+    sendStatus.textContent = "inactif (pas d'accéléromètre détécté, essayez de bouger votre appareil)";
     window.addEventListener('devicemotion', check_compatibilite);
 });
