@@ -29,7 +29,7 @@ def index():
 
 @app.route('/video_feed')
 def video_feed():
-    return app.send_static_file("video_feed.html")
+    return render_template("video_feed.html")
 
 
 @app.route('/video_stream')
