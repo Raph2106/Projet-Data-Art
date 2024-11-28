@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, Response
 from flask_socketio import SocketIO, emit
+from chaleur import generate_frame
 import time
 
 app = Flask(__name__)
@@ -15,6 +16,18 @@ def inject_time():
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
+
+
+@app.route('/video_feed')
+def video_feed():
+    return app.send_static_file("video_feed.html")
+
+
+@app.route('/video_stream')
+def video_stream():
+    """Diffuse le flux vidéo."""
+    return Response(generate_frame,
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @socketio.on("send_data")
