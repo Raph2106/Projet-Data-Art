@@ -8,7 +8,11 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
 app.debug = True
 socketio = SocketIO(app)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    filename='app.log',
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 
 @app.context_processor
