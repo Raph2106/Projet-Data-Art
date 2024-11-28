@@ -4,15 +4,17 @@ from chaleur import generate_frame
 import time
 import logging
 
-app = Flask(__name__)
-app.config["SECRET_KEY"] = "secret"
-app.debug = True
-socketio = SocketIO(app)
 logging.basicConfig(
     filename='app.log',
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
+
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "secret"
+app.debug = True
+
+socketio = SocketIO(app)
 
 
 @app.context_processor
@@ -32,7 +34,6 @@ def video_feed():
 
 @app.route('/video_stream')
 def video_stream():
-    """Diffuse le flux vidéo."""
     return Response(generate_frame,
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
