@@ -14,7 +14,7 @@ def inject_time():
 
 @app.route("/")
 def index():
-    return render_template("main_socket.html")
+    return app.send_static_file("index.html")
 
 
 @socketio.on("send_data")
@@ -24,4 +24,4 @@ def handle_send_data(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=8080)
+    socketio.run(app, host="0.0.0.0", port=1020)
