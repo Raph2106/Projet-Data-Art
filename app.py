@@ -2,10 +2,13 @@ from flask import Flask, Response
 from flask_socketio import SocketIO, emit
 from chaleur import generate_frame
 import time
+import logging
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
+app.debug = True
 socketio = SocketIO(app)
+logging.basicConfig(level=logging.DEBUG)
 
 
 @app.context_processor
