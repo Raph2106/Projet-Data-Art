@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch('/test')
                 .then(response => response.text())
                 .then(data => alert(data))
+                .catch(error => console.error('Erreur : ', error))
         });
     }
 
