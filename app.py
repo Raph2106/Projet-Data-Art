@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template
+from flask import Flask, Response
 from flask_socketio import SocketIO, emit
 from chaleur import generate_frame
 import time
@@ -24,12 +24,12 @@ def inject_time():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return app.send_static_file("static/index.html")
 
 
 @app.route('/video_feed')
 def video_feed():
-    return render_template("video_feed.html")
+    return app.send_static_file("video_feed.html")
 
 
 @app.route('/video_stream')
