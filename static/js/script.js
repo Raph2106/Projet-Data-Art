@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dataContainer = document.querySelector('.data-container');
     const startStopButton = document.getElementById('start_stop');
     const sendStatus = document.getElementById('sendStatus');
+    const testButton = document.getElementById('testButton')
 
     const socket = io.connect(`${window.location.protocol}//${window.location.hostname}:${window.location.port}`);
 
@@ -46,6 +47,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 sendStatus.textContent = "inactif";
             }
         });
+        testButton.addEventListener('click', function () {
+            fetch('/test').then(alert('requête envoyée'))
+        })
     }
 
     if (typeof DeviceMotionEvent !== 'undefined') {

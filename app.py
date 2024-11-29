@@ -22,14 +22,19 @@ def inject_time():
     return {"time": time.time}
 
 
-@app.route("/")
+@app.route("/static")
 def index():
-    return app.send_static_file("static/index.html")
+    return app.send_static_file("index.html")
 
 
 @app.route('/video_feed')
 def video_feed():
     return app.send_static_file("video_feed.html")
+
+
+@app.route('/test')
+def testFlask():
+    print("Le Flask est accessible.")
 
 
 @app.route('/video_stream')
