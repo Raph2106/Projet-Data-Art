@@ -22,7 +22,7 @@ def inject_time():
     return {"time": time.time}
 
 
-@app.route("/static")
+@app.route("/")
 def index():
     return app.send_static_file("index.html")
 
