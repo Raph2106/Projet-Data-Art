@@ -105,8 +105,7 @@ def generate_frame():
     num_iterations = 200
     for _ in range(num_iterations):
 
-        for _ in range(3):
-            sim.update()
+        sim.update()
 
         ax.clear()
         sim.visualize_3d(ax)
@@ -121,4 +120,4 @@ def generate_frame():
 
         buf.close()
 
-        time.sleep(0.005)
+        time.sleep(0.05)
