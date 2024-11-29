@@ -39,7 +39,7 @@ def testFlask():
 
 @app.route('/video_stream')
 def video_stream():
-    return Response(generate_frame,
+    return Response(generate_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
