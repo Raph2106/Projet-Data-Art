@@ -34,7 +34,7 @@ def video_feed():
 
 @app.route('/test')
 def testFlask():
-    print("Le Flask est accessible.")
+    return Response("Réponse de Flask.")
 
 
 @app.route('/video_stream')
