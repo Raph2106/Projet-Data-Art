@@ -38,7 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function sendDataToServer() {
-        socket.emit('send_data', { x: accX, y: accY, z: accZ });
+        if (socket) {
+            socket.emit('send_data', { x: accX, y: accY, z: accZ });
+        }
     }
 
     function main() {
@@ -88,11 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
         startStopButton.disabled = true;
         permissionButton.style.display = 'none';
     }
-
-    // Réception d'une réponse du serveur
-    socket.on('data_response', function (data) {
-        console.log("Réponse du serveur :", data);
-    });
 
     function check_compatibilite(event) {
         startStopButton.disabled = false;
