@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         testButton.addEventListener('click', function () {
-            fetch('/test').then(alert('requête envoyée'))
+            fetch('/test').then(response => alert(response))
         })
     }
 
