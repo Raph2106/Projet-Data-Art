@@ -48,8 +48,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         testButton.addEventListener('click', function () {
-            fetch('/test').then(response => alert(response))
-        })
+            fetch('/test')
+                .then(response => response.text())
+                .then(data => alert(data))
+        });
     }
 
     if (typeof DeviceMotionEvent !== 'undefined') {
