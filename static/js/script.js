@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sendStatus = document.getElementById('sendStatus');
     const testButton = document.getElementById('testButton')
 
-    const socket = io.connect(`${window.location.protocol}//${window.location.hostname}:${window.location.port}`);
+    let socket = null
 
     let accX = 0;
     let accY = 0;
@@ -28,6 +28,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('accZ').innerText = accZ;
     }
 
+    function initializeSocket() {
+        if (!socket) {
+            socket = io.connect(`${window.location.protocol}//${window.location.hostname}:${window.location.port}`);
+            socket.on('data_response', function (data) {
+                console.log("Réponse serveur :", data);
+            });
+        }
+    }
+
     function sendDataToServer() {
         socket.emit('send_data', { x: accX, y: accY, z: accZ });
     }
@@ -38,11 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('devicemotion', recup_acc);
         startStopButton.addEventListener('click', function () {
             if (!envoi) {
+                initializeSocket();
                 intervalId = setInterval(sendDataToServer, delay);
                 envoi = true;
                 sendStatus.textContent = "actif";
             } else {
                 clearInterval(intervalId);
+                socket = null
                 envoi = false;
                 sendStatus.textContent = "inactif";
             }
