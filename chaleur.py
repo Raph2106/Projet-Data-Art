@@ -121,4 +121,4 @@ def generate_frame():
 
         buf.close()
 
-        time.sleep(0.05)
+        time.sleep(0.5)
