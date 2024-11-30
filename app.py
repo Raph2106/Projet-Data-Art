@@ -17,7 +17,7 @@ app.debug = True
 
 CORS(app)
 
-socketio = SocketIO(app, cors_allowed_origins="https://fenouil.aioli.ec-m.fr")
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 @app.context_processor

@@ -13,9 +13,7 @@
     <img id="simulationImage" class="data-container" alt="Simulation" />
 
     <script>
-        const socket = io("wss://fenouil.aioli.ec-m.fr", {
-            transports: ["websocket"]
-        });
+        const socket = io.connect('https://localhost:1120', { transports: ['websocket'] });
 
 
         window.onload = function () {
