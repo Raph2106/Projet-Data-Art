@@ -1,6 +1,6 @@
 from flask import Flask, Response, render_template
 from flask_socketio import SocketIO, emit
-from chaleur import generate_frame
+from chaleur import generate_frame, generate_frame2
 import time
 import logging
 
@@ -32,6 +32,11 @@ def video_feed():
     return render_template("video_feed.html")
 
 
+@app.route('/video_socket')
+def video_socket():
+    return render_template("video_socket.html")
+
+
 @app.route('/test')
 def testFlask():
     return Response(response="Réponse de Flask. \n")
@@ -47,6 +52,13 @@ def video_stream():
 def handle_send_data(data):
     print("Données reçues:", data)
     emit("data_response", {"status": "Données reçues avec succès"})
+
+
+@socketio.on('start_video')
+def start_video():
+    for frame_base64 in generate_frame2():
+        emit('new_frame', {'image': frame_base64})
+        time.sleep(0.04)
 
 
 if __name__ == "__main__":

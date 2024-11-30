@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import io
 import time
+import base64
 
 
 class HeatSimulation3D:
@@ -117,3 +118,36 @@ def generate_frame():
         buf.close()
 
         time.sleep(0.04)
+
+
+def generate_frame_image(sim):
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
+    sim.visualize_3d(ax)
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='jpeg', bbox_inches='tight')
+    buf.seek(0)
+
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+
+    buf.close()
+    plt.close(fig)
+
+    return image_base64
+
+
+def generate_frame2():
+
+    sim = HeatSimulation3D(30, 30, diffusion_rate=0.15)
+
+    sim.add_heat_source(15, 15, temperature=1.0, radius=4)
+    sim.add_heat_source(10, 10, temperature=0.8, radius=3)
+    sim.add_heat_source(20, 20, temperature=0.6, radius=3)
+
+    num_iterations = 600
+    for i in range(num_iterations):
+        sim.update()
+        frame_base64 = generate_frame_image(sim)
+        yield frame_base64
