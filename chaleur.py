@@ -85,7 +85,6 @@ class HeatSimulation3D:
 
         ax.set_zlim(0, 1)
         ax.set_axis_off()
-        plt.title("Simulation de chaleur 3D")
         return surf
 
 
