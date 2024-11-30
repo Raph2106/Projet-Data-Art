@@ -65,7 +65,6 @@ class HeatSimulation3D:
                                                              heat_section)
 
     def visualize_3d(self, ax=None):
-
         if ax is None:
             fig = plt.figure(figsize=(10, 8))
             ax = fig.add_subplot(111, projection='3d')
@@ -85,9 +84,7 @@ class HeatSimulation3D:
             antialiased=True)
 
         ax.set_zlim(0, 1)
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_zlabel('Température')
+        ax.set_axis_off()
         plt.title("Simulation de chaleur 3D")
         return surf
 
