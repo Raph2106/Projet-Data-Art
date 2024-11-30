@@ -1,5 +1,6 @@
 from flask import Flask, Response, render_template
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS
 from chaleur import generate_frame, generate_frame2
 import time
 import logging
@@ -14,7 +15,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
 app.debug = True
 
-socketio = SocketIO(app)
+CORS(app)
+
+socketio = SocketIO(app, cors_allowed_origins="https://fenouil.aioli.ec-m.fr")
 
 
 @app.context_processor
