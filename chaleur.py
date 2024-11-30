@@ -102,7 +102,7 @@ def generate_frame():
     sim.add_heat_source(10, 10, temperature=0.8, radius=3)
     sim.add_heat_source(20, 20, temperature=0.6, radius=3)
 
-    num_iterations = 200
+    num_iterations = 600
     for _ in range(num_iterations):
 
         sim.update()
