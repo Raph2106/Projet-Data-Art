@@ -14,8 +14,9 @@
     <img id="simulationImage" class="data-container" alt="Simulation" />
 
     <script>
-        // Connexion à SocketIO
-        const socket = io.connect('https://' + document.domain + ':' + location.port);
+        const socket = io.connect('https://' + document.domain + ':' + location.port, {
+            transports: ['websocket'],
+        });
 
         // Démarrer la diffusion des frames lorsque la page est prête
         window.onload = function () {
