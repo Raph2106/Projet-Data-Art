@@ -1,6 +1,5 @@
 from flask import Flask, Response, render_template
 from flask_socketio import SocketIO, emit
-from flask_cors import CORS
 from chaleur import generate_frame, generate_frame2
 import time
 import logging
@@ -15,9 +14,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
 app.debug = True
 
-CORS(app)
-
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app)
 
 
 @app.context_processor
@@ -33,11 +30,6 @@ def index():
 @app.route('/video_feed')
 def video_feed():
     return render_template("video_feed.html")
-
-
-@app.route('/video_socket')
-def video_socket():
-    return render_template("video_socket.html")
 
 
 @app.route('/test')
@@ -65,6 +57,4 @@ def start_video():
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="::1",
-                 port=1120,
-                 ssl_context=("cert.pem", "key.pem"))
+    socketio.run(app, host="::1", port=1120)
