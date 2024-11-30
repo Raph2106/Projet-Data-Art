@@ -13,20 +13,18 @@
     <img id="simulationImage" class="data-container" alt="Simulation" />
 
     <script>
-        const socket = io.connect('https://' + document.domain + ':' + location.port, {
-            transports: ['websocket'],
+        const socket = io("wss://fenouil.aioli.ec-m.fr", {
+            transports: ["websocket"]
         });
 
-        // Démarrer la diffusion des frames lorsque la page est prête
+
         window.onload = function () {
             socket.emit('start_video');
         };
 
-        // Recevoir un nouveau frame en base64
         socket.on('new_frame', function (data) {
-            // Mise à jour de l'image avec les nouvelles données
             const imgElement = document.getElementById("simulationImage");
-            imgElement.src = "data:image/jpeg;base64," + data.image; // Mise à jour de l'image
+            imgElement.src = "data:image/jpeg;base64," + data.image;
         });
     </script>
 </body>
