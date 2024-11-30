@@ -32,6 +32,11 @@ def video_feed():
     return render_template("video_feed.html")
 
 
+@app.route('/video_socket')
+def video_socket():
+    return render_template("video_socket.html")
+
+
 @app.route('/test')
 def testFlask():
     return Response(response="Réponse de Flask. \n")
