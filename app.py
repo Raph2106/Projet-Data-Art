@@ -66,5 +66,4 @@ def start_video():
 
 if __name__ == "__main__":
     socketio.run(app, host="::1",
-                 port=1120,
-                 ssl_context=("cert.pem", "key.pem"))
+                 port=1120)
