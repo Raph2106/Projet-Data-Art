@@ -66,9 +66,9 @@ def video_stream():
 
 @socketio.on("send_data")
 def handle_send_data(data):
-    global shared_data
-    with data_lock:
-        shared_data = data
+    #    global shared_data
+    #    with data_lock:
+    #        shared_data = data
     print("Données reçues:", data)
     emit("data_response", {"status": "Données reçues avec succès"})
 
