@@ -107,7 +107,7 @@ def generate_frame(current_data):
     num_iterations = 600
     for _ in range(num_iterations):
         if "x" in current_data:
-            sim.add_heat_source(current_data["x"])
+            sim.add_heat_source(current_data["x"], 0, 0.5, radius=1)
 
         sim.update()
 

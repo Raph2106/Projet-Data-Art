@@ -6,6 +6,7 @@ import time
 import logging
 import threading
 
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.basicConfig(
     filename='app.log',
     level=logging.DEBUG,
