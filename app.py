@@ -1,5 +1,6 @@
 from flask import Flask, Response, render_template
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS
 from chaleur import generate_frame
 import time
 import logging
@@ -15,6 +16,8 @@ logging.basicConfig(
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key"
 app.debug = True
+
+CORS(app, origins=['https://fenouil.aioli.ec-m.fr'])
 
 socketio = SocketIO(app)
 
@@ -49,7 +52,9 @@ def testFlask():
 
 @app.route('/video_stream')
 def video_stream():
+    global shared_data
     with data_lock:
+        print("Etat de shared_data avant passage en fonction generate_frame :", shared_data)
         return Response(generate_frame(shared_data),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
