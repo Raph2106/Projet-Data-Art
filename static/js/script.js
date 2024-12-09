@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let envoi = false;
     startStopButton.disabled = true;
 
-    const delay = 500;
+    const delay = 1000;
 
     let intervalId;
 

@@ -42,8 +42,8 @@ class HeatSimulation3D:
                 laplacian = (north + south + east + west - 4 * center)
                 new_grid[i, j] = center + self.diffusion_rate * laplacian
 
-        if np.random.random() < 1:
-            new_grid += self.simplified_perlin_noise()
+    #    if np.random.random() < 1:
+    #        new_grid += self.simplified_perlin_noise()
 
         self.grid = np.clip(new_grid * 0.999, 0, 1)
 
@@ -91,28 +91,29 @@ class HeatSimulation3D:
         ax.set_axis_off()
         return surf
 
+    def visualize_2d(self, ax=None):
+        if ax is None:
+            fig, ax = plt.subplots(figsize=(10, 8))
+        ax.clear()
+        cax = ax.imshow(self.grid, cmap='hot', origin='lower', interpolation='nearest')
+        ax.axis('off')
+        return cax
 
-def generate_frame(current_data):
+
+def generate_frame():
 
     plt.ioff()
 
-    sim = HeatSimulation3D(30, 30, diffusion_rate=0.15)
-    fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(111, projection='3d')
+    sim = HeatSimulation3D(150, 150, diffusion_rate=0.15)
+    fig, ax = plt.subplots(figsize=(10, 8))
 
     sim.add_heat_source(15, 15, temperature=1.0, radius=4)
     sim.add_heat_source(10, 10, temperature=0.8, radius=3)
     sim.add_heat_source(20, 20, temperature=0.6, radius=3)
 
-    num_iterations = 600
-    for _ in range(num_iterations):
-        if "x" in current_data:
-            sim.add_heat_source(current_data["x"], current_data["z"], 0.5, radius=1)
-
+    while True:
         sim.update()
-
-        ax.clear()
-        sim.visualize_3d(ax)
+        sim.visualize_2d(ax)
 
         buf = io.BytesIO()
         plt.savefig(buf, format='jpeg', bbox_inches='tight')
@@ -125,36 +126,3 @@ def generate_frame(current_data):
         buf.close()
 
         time.sleep(0.04)
-
-
-def generate_frame_image(sim):
-    fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(111, projection='3d')
-
-    sim.visualize_3d(ax)
-
-    buf = io.BytesIO()
-    plt.savefig(buf, format='jpeg', bbox_inches='tight')
-    buf.seek(0)
-
-    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-
-    buf.close()
-    plt.close(fig)
-
-    return image_base64
-
-
-def generate_frame2():
-
-    sim = HeatSimulation3D(30, 30, diffusion_rate=0.15)
-
-    sim.add_heat_source(15, 15, temperature=1.0, radius=4)
-    sim.add_heat_source(10, 10, temperature=0.8, radius=3)
-    sim.add_heat_source(20, 20, temperature=0.6, radius=3)
-
-    num_iterations = 600
-    for i in range(num_iterations):
-        sim.update()
-        frame_base64 = generate_frame_image(sim)
-        yield frame_base64
