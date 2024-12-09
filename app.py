@@ -52,6 +52,7 @@ def testFlask():
 
 @app.route('/video_stream')
 def video_stream():
+    global shared_data
     def wrapped_generate_frame():
         while True:
             with data_lock:
@@ -63,6 +64,8 @@ def video_stream():
 
 @socketio.on("send_data")
 def handle_send_data(data):
+    global shared_data
+    shared_data = data
     print("Données reçues:", data)
     emit("data_response", {"status": "Données reçues avec succès"})
 
