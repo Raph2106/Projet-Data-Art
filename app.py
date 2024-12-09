@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key"
 app.debug = True
 
-CORS(app, origins=["https://fenouil.aioli.ec-m.fr"])
+CORS(app, origins="https://fenouil.aioli.ec-m.fr")
 
 socketio = SocketIO(app)
 
