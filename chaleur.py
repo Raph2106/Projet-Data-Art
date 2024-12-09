@@ -1,8 +1,11 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import io
 import time
 import base64
+
+matplotlib.use('Agg')
 
 
 class HeatSimulation3D:
@@ -89,7 +92,9 @@ class HeatSimulation3D:
         return surf
 
 
-def generate_frame():
+def generate_frame(current_data):
+
+    plt.ioff()
 
     sim = HeatSimulation3D(30, 30, diffusion_rate=0.15)
     fig = plt.figure(figsize=(10, 8))
@@ -101,6 +106,8 @@ def generate_frame():
 
     num_iterations = 600
     for _ in range(num_iterations):
+        if "x" in current_data:
+            sim.add_heat_source(current_data["x"])
 
         sim.update()
 

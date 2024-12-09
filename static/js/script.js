@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function sendDataToServer() {
         if (socket) {
-            socket.emit('send_data', { x: accX, y: accY, z: accZ });
+            socket.emit('send_data', { "x": accX, "y": accY, "z": accZ });
         }
     }
 

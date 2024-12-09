@@ -4,6 +4,7 @@ from flask_cors import CORS
 from chaleur import generate_frame, generate_frame2
 import time
 import logging
+import threading
 
 logging.basicConfig(
     filename='app.log',
@@ -18,6 +19,9 @@ app.debug = True
 CORS(app)
 
 socketio = SocketIO(app, cors_allowed_origins="https://fenouil.aioli.ec-m.fr")
+
+shared_data = {}
+data_lock = threading.Lock()
 
 
 @app.context_processor
@@ -47,7 +51,12 @@ def testFlask():
 
 @app.route('/video_stream')
 def video_stream():
-    return Response(generate_frame(),
+    def wrapped_generate_frame():
+        while True:
+            with data_lock:
+                current_data = shared_data.copy()
+            yield from generate_frame(current_data)
+    return Response(wrapped_generate_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
