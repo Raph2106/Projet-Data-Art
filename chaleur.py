@@ -97,7 +97,7 @@ class HeatSimulation3D:
         return cax
 
 
-def generate_frame(data):
+def generate_frame(get_data):
 
     plt.ioff()
 
@@ -112,7 +112,7 @@ def generate_frame(data):
         sim.update()
         sim.visualize_2d(ax)
 
-        print("Données arrivant dans generate_frame :", data)
+        print("Données arrivant dans generate_frame :", get_data())
 
         buf = io.BytesIO()
         plt.savefig(buf, format="jpeg", bbox_inches="tight")
