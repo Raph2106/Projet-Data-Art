@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', function () {
     startStopButton.disabled = true;
 
     function recup_acc(event) {
-        accX = event.accelerationIncludingGravity.x || 0;
-        accY = event.accelerationIncludingGravity.y || 0;
-        accZ = event.accelerationIncludingGravity.z || 0;
+        accX = event.accelerationIncludingGravity.x.toFixed(1) || 0;
+        accY = event.accelerationIncludingGravity.y.toFixed(1) || 0;
+        accZ = event.accelerationIncludingGravity.z.toFixed(1) || 0;
 
-        document.getElementById('accX').innerText = accX.toFixed(1);
-        document.getElementById('accY').innerText = accY.toFixed(1);
-        document.getElementById('accZ').innerText = accZ.toFixed(1);
+        document.getElementById('accX').innerText = accX;
+        document.getElementById('accY').innerText = accY;
+        document.getElementById('accZ').innerText = accZ;
     }
 
     function sendDataToServer() {
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({ "x": accX, "y": accY, "z": accZ })
         })
-            .then(console.log(accX, accY, accZ))
             .then(response => response.json())
             .then(data => console.log("Données envoyées avec succès:", data))
             .catch(error => console.error("Erreur d'envoi des données:", error));
