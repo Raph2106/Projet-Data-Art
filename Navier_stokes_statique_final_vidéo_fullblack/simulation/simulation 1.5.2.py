@@ -3,8 +3,8 @@ import string as st
 import random as rd
 import librosa
 import numpy as np
-from Navier_stokes_statique_final_vidéo.perturbation import *
-from Navier_stokes_statique_final_vidéo.fluid_simulation import *
+from Navier_stokes_statique_final_vidéo_fullblack.perturbation import *
+from Navier_stokes_statique_final_vidéo_fullblack.fluid_simulation import *
 
 
 sim = FluidSimulation(size=70)
