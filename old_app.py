@@ -1,7 +1,20 @@
-from flask import Flask, Response, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template
+import logging
 
 app = Flask(__name__)
 user_data = {}
+app.debug = True
+
+
+logging.getLogger("matplotlib").setLevel(logging.WARNING)
+logging.basicConfig(
+    filename="old_app.log",
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+shared_data = {"x": 1.0}
+test_data = {"x": 2.0}
 
 
 @app.route("/old")
