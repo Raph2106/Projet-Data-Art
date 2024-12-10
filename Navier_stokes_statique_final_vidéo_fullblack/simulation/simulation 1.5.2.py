@@ -92,7 +92,8 @@ def analyze_audio_per_tenth_second(file_path):
             normalized_tempo,               # Int tempo
             tonalite_tuple,                 # Tuple tonalité
             float(normalized_intensity),    # Float intensité
-            float(normalized_rhythm)        # Float rythme
+            float(normalized_rhythm),       # Float rythme
+            tenth_seconds
         ])
 
     return normalized_results
