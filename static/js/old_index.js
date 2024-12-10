@@ -5,13 +5,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const sendStatus = document.getElementById('sendStatus');
 
     const url = 'https://fenouil.aioli.ec-m.fr';
-    const delay = 2000;
+    const delay = 1000;
 
     let accX = 0;
     let accY = 0;
     let accZ = 0;
 
     let envoi = false;
+
+    startStopButton.disabled = true;
 
     function recup_acc(event) {
         accX = event.accelerationIncludingGravity.x || 0;
@@ -53,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Vérification de l'API DeviceMotionEvent et demande de permission pour iOS > 13
     if (typeof DeviceMotionEvent !== 'undefined') {
         if (typeof DeviceMotionEvent.requestPermission === 'function') {
             permissionButton.addEventListener('click', function () {
@@ -72,6 +73,16 @@ document.addEventListener('DOMContentLoaded', function () {
             main();
         }
     } else {
-        alert('API DeviceMotionEvent non supportée');
+        alert('API DeviceMotionEvent non supportée sur cet appareil.');
+        startStopButton.disabled = true;
+        permissionButton.style.display = 'none';
     }
+
+    function check_compatibilite() {
+        startStopButton.disabled = false;
+        sendStatus.textContent = "inactif";
+        window.removeEventListener('devicemotion', check_compatibilite);
+    }
+    sendStatus.textContent = "inactif (pas d'accéléromètre détécté, essayez de bouger votre appareil)";
+    window.addEventListener('devicemotion', check_compatibilite);
 });

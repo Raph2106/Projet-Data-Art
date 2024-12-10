@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
         permissionButton.style.display = 'none';
     }
 
-    function check_compatibilite(event) {
+    function check_compatibilite() {
         startStopButton.disabled = false;
         sendStatus.textContent = "inactif";
         window.removeEventListener('devicemotion', check_compatibilite);
