@@ -27,7 +27,6 @@
 
         // Recevoir un nouveau frame en base64
         socket.on('new_frame', function (data) {
-            // Mise à jour de l'image avec les nouvelles données
             const imgElement = document.getElementById("simulationImage");
             imgElement.src = "data:image/jpeg;base64," + data.image; // Mise à jour de l'image
         });
