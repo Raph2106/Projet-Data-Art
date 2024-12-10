@@ -1,8 +1,6 @@
-from flask import Flask, Response, render_template, request, jsonify
+from flask import Flask, Response, render_template, request
 from flask_socketio import SocketIO, emit
-from flask_cors import CORS
 from chaleur import generate_frame
-from random import random
 import time
 import logging
 import threading
@@ -17,8 +15,6 @@ logging.basicConfig(
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret_key"
 app.debug = True
-
-CORS(app, origins="https://fenouil.aioli.ec-m.fr")
 
 socketio = SocketIO(app)
 
@@ -64,7 +60,7 @@ def testFlask():
     return Response(response="Réponse de Flask. \n")
 
 
-@app.route("/video_stream")
+@app.route("/websocket/video_stream")
 def video_stream():
     return Response(
         generate_frame(get_shared_data),
