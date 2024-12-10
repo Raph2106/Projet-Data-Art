@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template
+from flask import Flask, Response, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 from chaleur import generate_frame
@@ -9,7 +9,7 @@ import threading
 
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.basicConfig(
-    filename="app.log",
+    filename="old_app.log",
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
@@ -23,6 +23,7 @@ CORS(app, origins="https://fenouil.aioli.ec-m.fr")
 socketio = SocketIO(app)
 
 shared_data = {"x": 1.0}
+test_data = {"x": 2.0}
 data_lock = threading.Lock()
 
 
@@ -36,11 +37,18 @@ def inject_time():
     return {"time": time.time}
 
 
-@app.route("/")
+@app.route("/websocket")
 def index():
     return render_template("index.html")
 
 
+@app.route("/post", methods=["POST"])
+def update_data():
+    test_data["x"] = request.json["x"]
+    return {"Données reçues": test_data}
+
+
+# mettre route /websocket
 @app.route("/video_feed")
 def video_feed():
     return render_template("video_feed.html")

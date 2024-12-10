@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function initializeSocket() {
         if (!socket) {
-            socket = io.connect(`${window.location.protocol}//${window.location.hostname}:${window.location.port}`);
+            socket = io.connect(`${window.location.protocol}//${window.location.hostname}/websocket:${window.location.port}`);
             socket.on('data_response', function (data) {
                 console.log("Réponse serveur :", data);
             });
