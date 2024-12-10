@@ -1,4 +1,4 @@
-from flask import Flask, Response, Request, jsonify, render_template
+from flask import Flask, Response, request, jsonify, render_template
 
 app = Flask(__name__)
 user_data = {}
@@ -11,7 +11,7 @@ def old():
 
 @app.route("/data", methods=["POST"])
 def receive_data():
-    data = Request.json
+    data = request.json
     user_data["last_received"] = data
     print(f"Données reçues : {data}")
 

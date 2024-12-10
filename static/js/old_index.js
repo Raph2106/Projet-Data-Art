@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const startStopButton = document.getElementById('start_stop');
     const sendStatus = document.getElementById('sendStatus');
 
-    const url = 'https://fenouil.aioli.ec-m.fr';
+    const url = 'https://fenouil.aioli.ec-m.fr/data';
     const delay = 1000;
 
     let accX = 0;
