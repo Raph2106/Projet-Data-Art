@@ -60,7 +60,7 @@ def testFlask():
     return Response(response="Réponse de Flask. \n")
 
 
-@app.route("/websocket/video_stream")
+@app.route("/websocket_video_stream")
 def video_stream():
     return Response(
         generate_frame(get_shared_data),
