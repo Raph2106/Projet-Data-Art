@@ -133,4 +133,4 @@ viz = FluidVisualizer(sim)
 
 # Générer une vidéo pour la densité
 print("Génération de la vidéo de densité...")
-viz.save_animation('fluid_density.mp4', frames=300)
+viz.save_animation('fluid_density.mp4', frames=results[0][4])
