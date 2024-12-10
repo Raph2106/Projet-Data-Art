@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({ "x": accX, "y": accY, "z": accZ })
         })
+            .then(console.log(accX, accY, accZ))
             .then(response => response.json())
             .then(data => console.log("Données envoyées avec succès:", data))
             .catch(error => console.error("Erreur d'envoi des données:", error));
