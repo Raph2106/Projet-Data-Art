@@ -51,7 +51,7 @@ def generate_frame():
             sim.add_heat_source(
                 round(float(d["x"]) * 10),
                 round(float(d["y"]) * 10),
-                temperature=round(float(d["z"]) / 10),
+                temperature=round(abs(float(d["z"]) / 10)),
                 radius=round(float(d["z"]) / 4),
             )
         sim.update()
