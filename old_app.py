@@ -47,6 +47,8 @@ def generate_frame():
     while True:
         t0 = time.time()
         data = get_data2()
+        for d in data:
+            sim.add_heat_source(d["x"], d["y"], d["z"] // 3, d["z"] // 4)
         sim.update()
         sim.visualize_2d(ax)
 
@@ -77,7 +79,7 @@ def receive_data():
     unique_key = f"user_data_{int(time.time() * 1000)}"
     json_data = json.dumps(data)
     r.rpush(unique_key, json_data)
-    print(f"Données reçues : {data} \n État de r: {r}")
+    print(f"Données reçues : {data}")
 
     return jsonify({"status": "success", "received": data})
 
