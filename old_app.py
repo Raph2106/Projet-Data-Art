@@ -1,5 +1,6 @@
 from flask import Flask, Response, request, jsonify, render_template
 from chaleur import HeatSimulation3D
+from collections import deque
 import logging
 import matplotlib.pyplot as plt
 import io
@@ -8,9 +9,8 @@ import time
 app = Flask(__name__)
 data_switch = 0
 data_switches = (1, 0)
-user_data0 = []
-user_data1 = []
-frame_data = []
+user_data0 = deque()
+user_data1 = deque()
 app.debug = True
 
 
@@ -23,7 +23,7 @@ logging.basicConfig(
 
 
 def get_data():
-    global data_switch, frame_data, user_data0, user_data1
+    global data_switch, user_data0, user_data1
     print(user_data0, user_data1)
     if data_switch == 0:
         user_data1 = []
@@ -76,7 +76,6 @@ def old():
 @app.route("/data", methods=["POST"])
 def receive_data():
     data = request.json
-    print("Données reçue :", data, "\nSwitch :", data_switch)
     if data_switch == 0:
         user_data0.append(data)
     elif data_switch == 1:
