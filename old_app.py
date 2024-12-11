@@ -45,9 +45,9 @@ def generate_frame():
         data = get_data()
         for d in data:
             sim.add_heat_source2(
-                round(float(d["x"]) * 10),
-                round(float(d["y"]) * 10),
-                temperature=round(abs(float(d["z"]) / 10)),
+                round(float(d["x"])),
+                round(float(d["y"])),
+                temperature=round(abs(float(d["z"]))),
                 radius=round(float(d["z"])),
             )
         sim.update()
