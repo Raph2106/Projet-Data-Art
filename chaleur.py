@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import io
-import time
-import base64
 
 matplotlib.use("Agg")
 
@@ -69,25 +66,6 @@ class HeatSimulation3D:
             current_section, heat_section
         )
 
-    def visualize_3d(self, ax=None):
-        if ax is None:
-            fig = plt.figure(figsize=(10, 8))
-            ax = fig.add_subplot(111, projection="3d")
-        else:
-            ax.clear()
-
-        x = np.arange(0, self.width, 1)
-        y = np.arange(0, self.height, 1)
-        X, Y = np.meshgrid(x, y)
-
-        surf = ax.plot_surface(
-            X, Y, self.grid, cmap="hot", linewidth=0, antialiased=True
-        )
-
-        ax.set_zlim(0, 1)
-        ax.set_axis_off()
-        return surf
-
     def visualize_2d(self, ax=None):
         if ax is None:
             fig, ax = plt.subplots(figsize=(10, 8))
@@ -97,30 +75,97 @@ class HeatSimulation3D:
         return cax
 
 
-def generate_frame(get_data):
+class HeatSimulation3DfromClaude:
+    def __init__(self, width=30, height=30, diffusion_rate=0.2, value_limit=1.0):
+        self.width = width
+        self.height = height
+        self.grid = np.zeros((height, width))
+        self.diffusion_rate = diffusion_rate
+        self.value_limit = value_limit
 
-    plt.ioff()
+        self.center_x = width // 2
+        self.center_y = height // 2
 
-    sim = HeatSimulation3D(150, 150, diffusion_rate=0.15)
-    fig, ax = plt.subplots(figsize=(10, 8))
+    def update(self):
+        new_grid = np.copy(self.grid)
+        padded_grid = np.pad(self.grid, pad_width=1, mode="edge")
 
-    sim.add_heat_source(15, 15, temperature=1.0, radius=4)
-    sim.add_heat_source(10, 10, temperature=0.8, radius=3)
-    sim.add_heat_source(20, 20, temperature=0.6, radius=3)
+        for i in range(self.height):
+            for j in range(self.width):
+                center = padded_grid[i + 1, j + 1]
+                north = padded_grid[i, j + 1]
+                south = padded_grid[i + 2, j + 1]
+                east = padded_grid[i + 1, j + 2]
+                west = padded_grid[i + 1, j]
 
-    while True:
-        sim.update()
-        sim.visualize_2d(ax)
+                if i == 0:
+                    north = center
+                elif i == self.height - 1:
+                    south = center
+                if j == 0:
+                    west = center
+                elif j == self.width - 1:
+                    east = center
 
-        print("Données arrivant dans generate_frame :", get_data())
+                laplacian = north + south + east + west - 4 * center
+                new_grid[i, j] = center + self.diffusion_rate * laplacian
 
-        buf = io.BytesIO()
-        plt.savefig(buf, format="jpeg", bbox_inches="tight")
-        buf.seek(0)
+        self.grid = np.clip(new_grid * 0.999, -self.value_limit, self.value_limit)
 
-        frame = buf.read()
-        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
+    def add_heat_source(self, x, y, temperature=1.0, radius=3):
+        x = self.center_x + x
+        y = self.center_y + y
 
-        buf.close()
+        x = min(max(x, radius), self.width - radius - 1)
+        y = min(max(y, radius), self.height - radius - 1)
 
-        time.sleep(0.04)
+        y_indices, x_indices = np.ogrid[-radius : radius + 1, -radius : radius + 1]
+        distances = np.sqrt(x_indices**2 + y_indices**2)
+        sigma = radius / 2
+        heat_distribution = temperature * np.exp(-(distances**2) / (2 * sigma**2))
+
+        y_start = max(0, y - radius)
+        y_end = min(self.height, y + radius + 1)
+        x_start = max(0, x - radius)
+        x_end = min(self.width, x + radius + 1)
+
+        dist_y_start = radius - (y - y_start)
+        dist_y_end = radius + (y_end - y)
+        dist_x_start = radius - (x - x_start)
+        dist_x_end = radius + (x_end - x)
+
+        if (y_end - y_start) <= 0 or (x_end - x_start) <= 0:
+            return
+
+        heat_section = heat_distribution[
+            dist_y_start:dist_y_end, dist_x_start:dist_x_end
+        ]
+        current_section = self.grid[y_start:y_end, x_start:x_end]
+
+        if heat_section.shape != current_section.shape:
+            return
+
+        if temperature >= 0:
+            self.grid[y_start:y_end, x_start:x_end] = np.maximum(
+                current_section, heat_section
+            )
+        else:
+            self.grid[y_start:y_end, x_start:x_end] = np.minimum(
+                current_section, heat_section
+            )
+
+    def visualize_2d(self, ax=None):
+        if ax is None:
+            fig, ax = plt.subplots(figsize=(10, 8))
+        ax.clear()
+
+        cax = ax.imshow(
+            self.grid,
+            cmap="RdBu_r",
+            origin="lower",
+            interpolation="nearest",
+            vmin=-self.value_limit,
+            vmax=self.value_limit,
+        )
+        ax.axis("off")
+        return cax
