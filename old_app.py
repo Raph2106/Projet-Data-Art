@@ -24,6 +24,7 @@ logging.basicConfig(
 
 def get_data():
     global data_switch, frame_data, user_data0, user_data1
+    print(data_switch, user_data0, user_data1)
     if data_switch == 0:
         user_data1 = []
         data_switch = data_switches[data_switch]
@@ -32,6 +33,7 @@ def get_data():
         user_data0 = []
         data_switch = data_switches[data_switch]
         data = user_data1.copy()
+    print(data_switch, user_data0, user_data1, data)
     return data
 
 
