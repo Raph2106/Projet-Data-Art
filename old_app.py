@@ -41,7 +41,6 @@ def generate_frame():
         t0 = time.time()
         print(f"Etat vu par generate_frame de user_data avant get_data() : {user_data}")
         data = get_data()
-        print(f"Etat vu par generate_frame de user_data après get_data() : {user_data}")
         sim.update()
         sim.visualize_2d(ax)
 
