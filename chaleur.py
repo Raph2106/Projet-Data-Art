@@ -72,7 +72,7 @@ class HeatSimulation3D:
         return cax
 
 
-class HeatSimulation3DfromClaude:
+class HeatSimulation2D:
     def __init__(self, width=30, height=30, diffusion_rate=0.2, cooling_rate=0.1):
         self.width = width
         self.height = height
@@ -160,13 +160,72 @@ class HeatSimulation3DfromClaude:
             current_section, heat_section
         )
 
+    def add_heat_source2(self, x, y, temperature=50, radius=3):
+        # Ignorer les valeurs en dehors de [-100, 100]
+        if not (-100 <= x <= 100 and -100 <= y <= 100 and 0 <= temperature <= 100):
+            return
+
+        # Normaliser x, y et la température
+        x_normalized = (x + 100) / 200 * (self.width - 1)
+        y_normalized = (y + 100) / 200 * (self.height - 1)
+        temperature_normalized = temperature / 100.0
+
+        # Convertir les coordonnées en entiers et centrer autour du milieu
+        x = int(round(x_normalized))
+        y = int(round(y_normalized))
+
+        # Assurez-vous que x et y sont dans les limites de la grille
+        x = min(max(x, radius), self.width - radius - 1)
+        y = min(max(y, radius), self.height - radius - 1)
+
+        # Créer la grille pour la distribution de chaleur
+        y_indices, x_indices = np.ogrid[-radius : radius + 1, -radius : radius + 1]
+        distances2 = x_indices**2 + y_indices**2
+        sigma2 = (radius / 2) ** 2
+
+        # Distribution gaussienne pour simuler la chaleur
+        heat_distribution = temperature_normalized * np.exp(-distances2 / sigma2)
+
+        # Seuil pour des valeurs proches de zéro
+        heat_distribution[heat_distribution < 0.001] = 0
+
+        # Calculer les limites de la section à modifier
+        y_start = max(0, y - radius)
+        y_end = min(self.height, y + radius + 1)
+        x_start = max(0, x - radius)
+        x_end = min(self.width, x + radius + 1)
+
+        # Calculer les indices correspondants dans la distribution de chaleur
+        dist_y_start = radius - (y - y_start)
+        dist_y_end = radius + (y_end - y)
+        dist_x_start = radius - (x - x_start)
+        dist_x_end = radius + (x_end - x)
+
+        # Vérifier que les dimensions sont valides
+        if (y_end - y_start) <= 0 or (x_end - x_start) <= 0:
+            return
+
+        # Extraire les sections appropriées
+        heat_section = heat_distribution[
+            dist_y_start:dist_y_end, dist_x_start:dist_x_end
+        ]
+        current_section = self.grid[y_start:y_end, x_start:x_end]
+
+        # Vérifier que les dimensions correspondent
+        if heat_section.shape != current_section.shape:
+            return
+
+        # Appliquer la chaleur en utilisant le maximum
+        self.grid[y_start:y_end, x_start:x_end] = np.maximum(
+            current_section, heat_section
+        )
+
     def visualize_2d(self, ax=None):
         if ax is None:
             fig, ax = plt.subplots(figsize=(10, 8))
         ax.clear()
 
         # Modifier la colormap pour avoir un meilleur contraste
-        # 'hot' va du noir au rouge puis au jaune puis au blanc
         cax = ax.imshow(
             self.grid,
             cmap="seismic",

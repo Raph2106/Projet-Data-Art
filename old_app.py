@@ -1,5 +1,5 @@
 from flask import Flask, Response, request, jsonify, render_template
-from chaleur import HeatSimulation3D, HeatSimulation3DfromClaude
+from chaleur import HeatSimulation3D, HeatSimulation2D
 import logging
 import matplotlib.pyplot as plt
 import io
@@ -37,18 +37,14 @@ def generate_frame():
 
     plt.ioff()
     data = {}
-    sim = HeatSimulation3DfromClaude(150, 150, diffusion_rate=0.15)
+    sim = HeatSimulation2D(150, 150, diffusion_rate=0.15)
     fig, ax = plt.subplots(figsize=(10, 8))
-
-    sim.add_heat_source(15, 15, temperature=1.0, radius=4)
-    sim.add_heat_source(10, 10, temperature=0.8, radius=3)
-    sim.add_heat_source(20, 20, temperature=0.6, radius=3)
 
     while True:
         t0 = time.time()
         data = get_data()
         for d in data:
-            sim.add_heat_source(
+            sim.add_heat_source2(
                 round(float(d["x"]) * 10),
                 round(float(d["y"]) * 10),
                 temperature=round(abs(float(d["z"]) / 10)),
