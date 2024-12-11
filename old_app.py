@@ -1,6 +1,5 @@
 from flask import Flask, Response, request, jsonify, render_template
 from chaleur import HeatSimulation3D
-from queue import Queue
 import logging
 import matplotlib.pyplot as plt
 import io
@@ -9,7 +8,6 @@ import redis
 import json
 
 app = Flask(__name__)
-user_data = Queue()
 app.debug = True
 r = redis.StrictRedis(host="localhost", port=6379, db=0)
 
@@ -19,14 +17,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
-
-
-def get_data():
-    global user_data
-    items = []
-    while not user_data.empty():
-        items.append(user_data.get())
-    return items
 
 
 def get_data2():
@@ -56,7 +46,6 @@ def generate_frame():
 
     while True:
         t0 = time.time()
-        print(f"Etat vu par generate_frame de user_data avant get_data() : {user_data}")
         data = get_data2()
         sim.update()
         sim.visualize_2d(ax)
