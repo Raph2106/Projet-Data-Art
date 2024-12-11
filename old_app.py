@@ -48,7 +48,9 @@ def generate_frame():
         t0 = time.time()
         data = get_data2()
         for d in data:
-            sim.add_heat_source(d["x"], d["y"], d["z"] // 3, d["z"] // 4)
+            sim.add_heat_source(
+                float(d["x"]), float(d["y"]), float(d["z"]) // 3, float(d["z"]) // 4
+            )
         sim.update()
         sim.visualize_2d(ax)
 
