@@ -20,10 +20,11 @@ logging.basicConfig(
 
 
 def get_data():
-    data = []
+    global user_data
+    items = []
     while not user_data.empty():
-        data.append(user_data.get())
-    return data
+        items.append(user_data.get())
+    return items
 
 
 def generate_frame():
