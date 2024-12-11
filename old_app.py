@@ -24,7 +24,6 @@ logging.basicConfig(
 
 def get_data():
     global data_switch, frame_data, user_data0, user_data1
-    print(data_switch, user_data0, user_data1)
     if data_switch == 0:
         user_data1 = []
         data_switch = data_switches[data_switch]
@@ -33,7 +32,6 @@ def get_data():
         user_data0 = []
         data_switch = data_switches[data_switch]
         data = user_data1.copy()
-    print(data_switch, user_data0, user_data1, data)
     return data
 
 
@@ -77,10 +75,15 @@ def old():
 @app.route("/data", methods=["POST"])
 def receive_data():
     data = request.json
+    print("Données reçue :", data, "\nSwitch :", data_switch)
     if data_switch == 0:
+        print("Traitement pour switch 0: \n user_data0 avant append:", user_data0)
         user_data0.append(data)
+        print("user_data0 après append:", user_data0)
     elif data_switch == 1:
+        print("Traitement pour switch 1: \n user_data1 avant append:", user_data1)
         user_data1.append(data)
+        print("user_data1 après append:", user_data1)
     print(f"Données reçues : {data}")
 
     return jsonify({"status": "success", "received": data})
