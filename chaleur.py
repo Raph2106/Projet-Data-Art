@@ -79,43 +79,38 @@ class HeatSimulation3DfromClaude:
         self.grid = np.zeros((height, width))
         self.diffusion_rate = diffusion_rate
         self.cooling_rate = cooling_rate
+        # Définir le centre de la grille
+        self.center_x = width // 2
+        self.center_y = height // 2
 
     def update(self):
-        # Créer une copie de la grille
         new_grid = np.copy(self.grid)
-
-        # Utiliser un padding constant de 0 au lieu de "edge"
         padded_grid = np.pad(self.grid, pad_width=1, mode="constant", constant_values=0)
 
-        # Calculer la diffusion pour chaque cellule
         for i in range(self.height):
             for j in range(self.width):
-                # Points voisins
                 center = padded_grid[i + 1, j + 1]
                 north = padded_grid[i, j + 1]
                 south = padded_grid[i + 2, j + 1]
                 east = padded_grid[i + 1, j + 2]
                 west = padded_grid[i + 1, j]
 
-                # Pour les bords, utiliser une diffusion réduite
                 num_neighbors = 4
                 if i == 0 or i == self.height - 1 or j == 0 or j == self.width - 1:
-                    # Réduire la diffusion aux bords
                     self.diffusion_rate *= 0.5
 
-                # Calculer le laplacien
                 laplacian = (north + south + east + west - 4 * center) / num_neighbors
                 new_value = center + self.diffusion_rate * laplacian
-
-                # Appliquer le refroidissement
                 new_value *= 1 - self.cooling_rate
-
-                # S'assurer que la valeur reste dans les limites
                 new_grid[i, j] = max(0, min(1, new_value))
 
         self.grid = new_grid
 
     def add_heat_source(self, x, y, temperature=1.0, radius=3):
+        # Convertir les coordonnées relatives en coordonnées absolues centrées
+        x = self.center_x + x
+        y = self.center_y + y
+
         # Assurez-vous que x et y sont dans les limites de la grille
         x = min(max(x, radius), self.width - radius - 1)
         y = min(max(y, radius), self.height - radius - 1)
@@ -125,14 +120,14 @@ class HeatSimulation3DfromClaude:
         distances = np.sqrt(x_indices**2 + y_indices**2)
         sigma = radius / 2
 
-        # S'assurer que la température est positive et dans les limites
+        # Normaliser la température pour qu'elle atteigne 1.0 au centre
         temperature = min(abs(temperature), 1.0)
 
-        # Créer une distribution gaussienne avec décroissance rapide
-        heat_distribution = temperature * np.exp(-(distances**2) / (2 * sigma**2))
+        # Distribution gaussienne plus pointue pour créer un pic plus net
+        heat_distribution = temperature * np.exp(-(distances**2) / (sigma**2))
 
-        # Appliquer un seuil minimum pour éviter la diffusion de très faibles valeurs
-        heat_distribution[heat_distribution < 0.01] = 0
+        # Seuil minimum plus bas pour une meilleure transition
+        heat_distribution[heat_distribution < 0.001] = 0
 
         # Calculer les limites de la section à modifier
         y_start = max(0, y - radius)
@@ -160,7 +155,7 @@ class HeatSimulation3DfromClaude:
         if heat_section.shape != current_section.shape:
             return
 
-        # Appliquer la chaleur
+        # Appliquer la chaleur en utilisant le maximum
         self.grid[y_start:y_end, x_start:x_end] = np.maximum(
             current_section, heat_section
         )
@@ -170,7 +165,8 @@ class HeatSimulation3DfromClaude:
             fig, ax = plt.subplots(figsize=(10, 8))
         ax.clear()
 
-        # Utiliser une colormap avec un meilleur contraste pour les faibles valeurs
+        # Modifier la colormap pour avoir un meilleur contraste
+        # 'hot' va du noir au rouge puis au jaune puis au blanc
         cax = ax.imshow(
             self.grid,
             cmap="hot",
