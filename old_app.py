@@ -57,8 +57,6 @@ def generate_frame():
         sim.update()
         sim.visualize_2d(ax)
 
-        print("Données arrivant dans generate_frame :", data)
-
         buf = io.BytesIO()
         plt.savefig(buf, format="jpeg", bbox_inches="tight")
         buf.seek(0)
