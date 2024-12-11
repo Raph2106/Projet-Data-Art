@@ -52,7 +52,7 @@ def generate_frame():
                 round(float(d["x"]) * 10),
                 round(float(d["y"]) * 10),
                 temperature=round(abs(float(d["z"]) / 10)),
-                radius=round(float(d["z"]) / 4),
+                radius=round(float(d["z"])),
             )
         sim.update()
         sim.visualize_2d(ax)
