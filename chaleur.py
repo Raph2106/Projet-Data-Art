@@ -169,7 +169,7 @@ class HeatSimulation3DfromClaude:
         # 'hot' va du noir au rouge puis au jaune puis au blanc
         cax = ax.imshow(
             self.grid,
-            cmap="hot",
+            cmap="RdBu_r",
             origin="lower",
             interpolation="nearest",
             vmin=0,
