@@ -48,7 +48,7 @@ def generate_frame():
         t0 = time.time()
         data = get_data2()
         for d in data:
-            print(f"x: {d['x']}, y: {d['y']}, z: {d['z']}")
+            print(f"x: {type(d['x'])}, y: {type(d['y'])}, z: {type(d['z'])}")
         #    sim.add_heat_source(
         #        float(d["x"]), float(d["y"]), float(d["z"]) // 3, float(d["z"]) // 4
         #    )
