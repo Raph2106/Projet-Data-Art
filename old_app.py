@@ -81,7 +81,8 @@ def receive_data():
     data = request.json
     # user_data.put(data)
     unique_key = f"user_data_{int(time.time() * 1000)}"
-    r.rpush(unique_key, data)
+    json_data = json.dumps(data)
+    r.rpush(unique_key, json_data)
     print(f"Données reçues : {data} \n État de r: {r}")
 
     return jsonify({"status": "success", "received": data})
