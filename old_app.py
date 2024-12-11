@@ -32,9 +32,14 @@ def get_data():
 def get_data2():
     keys = r.keys("user_data_*")
     all_data = []
+
     for key in keys:
-        data = r.lrange(key, 0, -1)
-        all_data.extend([json.loads(d) for d in data])
+        while True:
+            data = r.lpop(key)
+            if not data:
+                break
+            all_data.append(json.loads(data))
+
     return all_data
 
 
