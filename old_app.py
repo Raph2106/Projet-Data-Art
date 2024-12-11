@@ -52,7 +52,10 @@ def generate_frame():
                 f"x: {type(float(d['x']))}, y: {type(float(d['y']))}, z: {type(d['z'])}"
             )
             sim.add_heat_source(
-                float(d["x"]), float(d["y"]), float(d["z"]) / 10, int(float(d["z"]) / 4)
+                float(d["x"]),
+                float(d["y"]),
+                temperature=float(d["z"]) / 10,
+                radius=int(float(d["z"]) / 4),
             )
         sim.update()
         sim.visualize_2d(ax)
