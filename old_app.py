@@ -19,7 +19,7 @@ logging.basicConfig(
 )
 
 
-def get_data2():
+def get_data():
     keys = r.keys("user_data_*")
     all_data = []
 
@@ -46,16 +46,17 @@ def generate_frame():
 
     while True:
         t0 = time.time()
-        data = get_data2()
+        data = get_data()
         for d in data:
             print(
                 f"x: {type(float(d['x']))}, y: {type(float(d['y']))}, z: {type(d['z'])}"
             )
+
             sim.add_heat_source(
                 float(d["x"]),
                 float(d["y"]),
                 temperature=float(d["z"]) / 10,
-                radius=int(float(d["z"]) / 4),
+                radius=round(float(d["z"]) / 4),
             )
         sim.update()
         sim.visualize_2d(ax)
