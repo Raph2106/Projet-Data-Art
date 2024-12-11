@@ -44,7 +44,7 @@ def generate_frame():
         t0 = time.time()
         data = get_data()
         for d in data:
-            sim.add_heat_source2(
+            sim.add_heat_source(
                 round(float(d["x"])),
                 round(float(d["y"])),
                 temperature=round(abs(float(d["z"]))),
