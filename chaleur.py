@@ -12,9 +12,6 @@ class HeatSimulation3D:
         self.grid = np.zeros((height, width))
         self.diffusion_rate = diffusion_rate
 
-    def simplified_perlin_noise(self):
-        return np.random.normal(0, 0.001, (self.height, self.width))
-
     def update(self):
         new_grid = np.copy(self.grid)
         padded_grid = np.pad(self.grid, pad_width=1, mode="edge")
@@ -161,7 +158,7 @@ class HeatSimulation3DfromClaude:
 
         cax = ax.imshow(
             self.grid,
-            cmap="RdBu_r",
+            cmap="hot",
             origin="lower",
             interpolation="nearest",
             vmin=-self.value_limit,
