@@ -5,11 +5,13 @@ import logging
 import matplotlib.pyplot as plt
 import io
 import time
+import redis
+import json
 
 app = Flask(__name__)
 user_data = Queue()
 app.debug = True
-
+r = redis.StrictRedis(host="localhost", port=6379, db=0)
 
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.basicConfig(
@@ -27,6 +29,15 @@ def get_data():
     return items
 
 
+def get_data2():
+    keys = r.keys("user_data_*")
+    all_data = []
+    for key in keys:
+        data = r.lrange(key, 0, -1)
+        all_data.extend([json.loads(d) for d in data])
+    return all_data
+
+
 def generate_frame():
 
     plt.ioff()
@@ -41,7 +52,7 @@ def generate_frame():
     while True:
         t0 = time.time()
         print(f"Etat vu par generate_frame de user_data avant get_data() : {user_data}")
-        data = get_data()
+        data = get_data2()
         sim.update()
         sim.visualize_2d(ax)
 
@@ -68,8 +79,10 @@ def old():
 @app.route("/data", methods=["POST"])
 def receive_data():
     data = request.json
-    user_data.put(data)
-    print(f"Données reçues : {data} \n État de user_data: {user_data}")
+    # user_data.put(data)
+    unique_key = f"user_data_{int(time.time() * 1000)}"
+    r.rpush(unique_key, data)
+    print(f"Données reçues : {data} \n État de r: {r}")
 
     return jsonify({"status": "success", "received": data})
 
