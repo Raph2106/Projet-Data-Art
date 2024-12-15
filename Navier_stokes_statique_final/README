@@ -1,0 +1,68 @@
+# Fluid Dynamics Music Visualization
+
+## Description
+
+Ce projet propose une visualisation unique des dynamiques fluides, où les caractéristiques musicales d'un fichier audio guident la simulation de l'écoulement. En transformant les propriétés sonores (tempo, tonalité, intensité) en perturbations dynamiques, le projet crée des animations fluides interactives qui "dansent" littéralement au rythme de la musique.
+
+## Composants Principaux
+
+### 1. Analyse Musicale (`normalisation_musique_bis2.py`)
+- Extraction des caractéristiques musicales via la bibliothèque `librosa`
+- Normalisation des paramètres :
+  * Fréquence spectrale
+  * Rythme et tempo
+  * Caractéristiques mélodiques
+  * Contraste spectral
+
+### 2. Simulation Fluide (`fluid_simulation.py`)
+- Implémentation de l'algorithme de Navier-Stokes
+- Simulations de dynamiques fluides avec :
+  * Diffusion
+  * Advection
+  * Projection incompressible
+
+### 3. Perturbations (`perturbation.py`)
+- Deux types de perturbations fluides :
+  * `Perturbation` : Perturbation omnidirectionnelle
+  * `DirectionalPerturbation` : Perturbation avec direction vectorielle
+
+### 4. Simulation Principale (`simulation.py`)
+- Points clés :
+  * Chargement et analyse du fichier musical
+  * Configuration de la simulation fluide
+  * Génération des perturbations basées sur l'analyse musicale
+
+## Dépendances
+
+- NumPy
+- Matplotlib
+- Librosa
+- Jax (pour certaines opérations numériques)
+
+## Installation
+
+```bash
+pip install numpy matplotlib librosa jax
+```
+
+## Utilisation
+
+Lancer le fichier simulation
+vous pouvez modifier les ligne suivante dans le code
+
+```python
+#choissir la normalisation souhaité
+from Navier_stokes_statique_final.normalisation_musique_bis2 import analyze_audio
+
+# Chargez votre fichier musical
+file_path = "votre_musique.mp3"
+
+# Lancez la simulation
+sim = FluidSimulation(size=70)
+viz = FluidVisualizer(sim)
+viz.save_animation('fluid_animation.mp4')
+```
+
+## Exemple de Résultat
+
+ a rajouter
