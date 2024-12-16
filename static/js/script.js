@@ -3,44 +3,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const dataContainer = document.querySelector('.data-container');
     const startStopButton = document.getElementById('start_stop');
     const sendStatus = document.getElementById('sendStatus');
-    const testButton = document.getElementById('testButton')
 
-    let socket = null
+    const url = 'http://127.0.0.1:1120/data';
+    const delay = 1000;
 
     let accX = 0;
     let accY = 0;
     let accZ = 0;
+    let list_accX = []
+    let list_accY = []
+    let list_accZ = []
+    let avgX = 0
+    let avgY = 0
+    let avgZ = 0
 
     let envoi = false;
+
     startStopButton.disabled = true;
-
-    const delay = 1000;
-
-    let intervalId;
 
     function recup_acc(event) {
         accX = event.accelerationIncludingGravity.x.toFixed(1) || 0;
         accY = event.accelerationIncludingGravity.y.toFixed(1) || 0;
         accZ = event.accelerationIncludingGravity.z.toFixed(1) || 0;
-
+        list_accX.push(accX)
+        list_accY.push(accY)
+        list_accZ.push(accZ)
         document.getElementById('accX').innerText = accX;
         document.getElementById('accY').innerText = accY;
         document.getElementById('accZ').innerText = accZ;
     }
 
-    function initializeSocket() {
-        if (!socket) {
-            socket = io.connect(`${window.location.protocol}//${window.location.hostname}/websocket:${window.location.port}`);
-            socket.on('data_response', function (data) {
-                console.log("Réponse serveur :", data);
-            });
-        }
-    }
-
     function sendDataToServer() {
-        if (socket) {
-            socket.emit('send_data', { "x": accX, "y": accY, "z": accZ });
+        for (wx in list_accX) {
+
         }
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "x": accX, "y": accY, "z": accZ })
+        })
+            .then(response => response.json())
+            .then(data => console.log("Données envoyées avec succès:", data))
+            .catch(error => console.error("Erreur d'envoi des données:", error));
     }
 
     function main() {
@@ -49,22 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('devicemotion', recup_acc);
         startStopButton.addEventListener('click', function () {
             if (!envoi) {
-                initializeSocket();
                 intervalId = setInterval(sendDataToServer, delay);
                 envoi = true;
                 sendStatus.textContent = "actif";
             } else {
                 clearInterval(intervalId);
-                socket = null
                 envoi = false;
                 sendStatus.textContent = "inactif";
             }
-        });
-        testButton.addEventListener('click', function () {
-            fetch('/test')
-                .then(response => response.text())
-                .then(data => alert(data))
-                .catch(error => console.error('Erreur : ', error))
         });
     }
 

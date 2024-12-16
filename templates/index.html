@@ -14,7 +14,6 @@
 
     <button id="permissionButton">Demander l'autorisation d'accès aux capteurs</button>
     <button id="start_stop">START/STOP</button>
-    <button id="testButton">TEST FLASK</button>
 
     <div class="data-container" style="display:none;">
         <p><strong>Accélération X :</strong> <span id="accX">0</span> m/s²</p>
@@ -24,7 +23,7 @@
 
     <div>Envoi des données : <span id="sendStatus">inactif (pas d'accéléromètre détécté, essayez de bouger votre
             appareil)</span></div>
-    <script src="{{ url_for('static', filename='js/old_index.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </body>
 
 </html>

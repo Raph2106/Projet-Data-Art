@@ -1,19 +1,19 @@
 from flask import Flask, Response, request, jsonify, render_template
-from chaleur import HeatSimulation3D, HeatSimulation2D
-import logging
+from chaleur import HeatSimulation2D
 import matplotlib.pyplot as plt
-import io
-import time
+import logging
 import redis
+import time
 import json
+import io
 
 app = Flask(__name__)
 app.debug = True
-r = redis.StrictRedis(host="localhost", port=6379, db=0)
+r = redis.StrictRedis(host="localhost", port=49152, db=0)
 
 logging.getLogger("matplotlib").setLevel(logging.WARNING)
 logging.basicConfig(
-    filename="old_app.log",
+    filename="app.log",
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
@@ -47,8 +47,8 @@ def generate_frame():
             sim.add_heat_source(
                 round(float(d["x"])),
                 round(float(d["y"])),
-                temperature=round(abs(float(d["z"]))),
-                radius=round(float(d["z"])),
+                z=round(abs(float(d["z"]))),
+                radius=round(float(d["z"]) / 4),
             )
         sim.update()
         sim.visualize_2d(ax)
@@ -57,8 +57,10 @@ def generate_frame():
         plt.savefig(buf, format="jpeg", bbox_inches="tight")
         buf.seek(0)
 
-        frame = buf.read()
-        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
+        frame = (
+            b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + buf.read() + b"\r\n"
+        )
+        yield (frame)
 
         buf.close()
         t1 = time.time()
@@ -68,13 +70,12 @@ def generate_frame():
 
 @app.route("/")
 def index():
-    return render_template("old_index.html")
+    return render_template("index.html")
 
 
 @app.route("/data", methods=["POST"])
 def receive_data():
     data = request.json
-    # user_data.put(data)
     unique_key = f"user_data_{int(time.time() * 1000)}"
     json_data = json.dumps(data)
     r.rpush(unique_key, json_data)
@@ -92,4 +93,4 @@ def video_stream():
 
 
 if __name__ == "__main__":
-    app.run(host="::1", port=1120)
+    app.run(host="0.0.0.0", port=1120)
