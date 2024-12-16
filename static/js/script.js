@@ -10,12 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let accX = 0;
     let accY = 0;
     let accZ = 0;
-    let list_accX = []
-    let list_accY = []
-    let list_accZ = []
-    let avgX = 0
-    let avgY = 0
-    let avgZ = 0
 
     let envoi = false;
 
@@ -25,18 +19,13 @@ document.addEventListener('DOMContentLoaded', function () {
         accX = event.accelerationIncludingGravity.x.toFixed(1) || 0;
         accY = event.accelerationIncludingGravity.y.toFixed(1) || 0;
         accZ = event.accelerationIncludingGravity.z.toFixed(1) || 0;
-        list_accX.push(accX)
-        list_accY.push(accY)
-        list_accZ.push(accZ)
         document.getElementById('accX').innerText = accX;
         document.getElementById('accY').innerText = accY;
         document.getElementById('accZ').innerText = accZ;
     }
 
     function sendDataToServer() {
-        for (wx in list_accX) {
 
-        }
         fetch(url, {
             method: 'POST',
             headers: {
