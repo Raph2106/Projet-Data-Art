@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('accZ').innerText = accZ;
     }
 
-    function sendDataToServer() {
+    function send_data() {
 
         fetch(url, {
             method: 'POST',
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('devicemotion', recup_acc);
         startStopButton.addEventListener('click', function () {
             if (!envoi) {
-                intervalId = setInterval(sendDataToServer, delay);
+                intervalId = setInterval(send_data, delay);
                 envoi = true;
                 sendStatus.textContent = "actif";
             } else {
