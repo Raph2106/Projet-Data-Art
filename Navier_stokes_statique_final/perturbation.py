@@ -81,3 +81,5 @@ class DirectionalPerturbation(Perturbation):
                         u[x, y] += self.strength * self.vx
                         v[x, y] += self.strength * self.vy
                         density[x, y] += self.density_value
+
+

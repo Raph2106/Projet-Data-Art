@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from scipy.ndimage import gaussian_filter
 
 plt.switch_backend('TkAgg')
 
@@ -9,8 +10,8 @@ class FluidSimulation:
         self.size = size
         self.dt = 0.3
         self.diff = 0.0005
-        self.visc = 0.00005
-        self.iterations = 20
+        self.visc = 0.00003
+        self.iterations = 50
         self.current_time = 0
 
         self.u = np.zeros((size, size))
@@ -149,7 +150,7 @@ class FluidVisualizer:
         # Initialize density visualization
         self.img_density = self.ax.imshow(
             self.sim.density,
-            cmap='turbo',  # A grayscale colormap that works well with black background
+            cmap='magma',
             interpolation='bicubic',
             vmin=0,
             vmax=1.5,
@@ -158,7 +159,11 @@ class FluidVisualizer:
 
     def update(self, frame):
         self.sim.step()
-        self.img_density.set_array(self.sim.density)
+
+        # Appliquer un filtre de flou gaussien
+        blurred_density = gaussian_filter(self.sim.density, sigma=1.2)  # Ajuste sigma pour plus ou moins de flou
+
+        self.img_density.set_array(blurred_density)
         return [self.img_density]
 
     def save_animation(self, filename='fluid_density.gif', frames=3500):
@@ -180,7 +185,7 @@ class FluidVisualizer:
         anim.save(
             filename.replace('.mp4', '.gif'),
             writer='pillow',
-            fps=60,
+            fps=120,
             savefig_kwargs={
                 'facecolor': 'black',
                 'edgecolor': 'none',

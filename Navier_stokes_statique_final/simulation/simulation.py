@@ -1,11 +1,8 @@
-import string as st
-import random as rd
-import librosa
 from Navier_stokes_statique_final.normalisation_musique import analyze_audio
 from Navier_stokes_statique_final.perturbation import *
 from Navier_stokes_statique_final.fluid_simulation import *
 
-sim = FluidSimulation(size=70)
+sim = FluidSimulation(size=100)
 center = sim.size // 2
 
 file_path = "musique/Katyusha.mp3"
